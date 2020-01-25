@@ -35,7 +35,7 @@ class Pier:
 			ranking[strftime("%D - %H:%M:%S")] = self.pindex
 		else:
 			record = max(ranking, key=operator.itemgetter(-1))
-			if self.pindex >= record:
+			if self.pindex >= ranking[record]:
 				ranking[strftime("%D - %H:%M:%S")] = self.pindex
 		with open(file, "w") as f:
 			f.write(dumps(ranking, indent=4))		 
