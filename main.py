@@ -1,7 +1,9 @@
 #-*-coding: utf-8-*-
 from tkinter import *
-from time import sleep
+from time import sleep, strftime
 from winsound import PlaySound, SND_ASYNC
+from json import loads, dumps
+import operator
 PI = "3.141592653589793238462643383279502884197169399375105820974944592307816406286208998628034825342117067982148086513282306647093844609550582231725359408128481117450284102701938521105559644622948954930381964428810975665933446128475648233786783165271201909145648566923460348610454326648213393607260249141273724587006606315588174881520920962829254091715364367892590360011330530548820466521384146951941511609433057270365759591953092186117381932611793105118548"
 
 def playsound(file):
@@ -16,6 +18,29 @@ class Pier:
 		self.root = root
 		self.counter = counter
 		self.counter["text"] = "Counter: {}".format(self.pindex)
+
+	def load_rank(self, file):
+		try:
+			with open(file, "r") as f:
+				content = loads(f.read())
+		except:
+			content = {}
+		
+		finally:
+			return content
+
+	def check_rank(self, file="source\\ranking.json"):
+		ranking = self.load_rank(file)
+		if len(ranking) == 0:
+			ranking[strftime("%D - %H:%M:%S")] = self.pindex
+		else:
+			record = max(ranking, key=operator.itemgetter(-1))
+			if self.pindex >= record:
+				ranking[strftime("%D - %H:%M:%S")] = self.pindex
+		with open(file, "w") as f:
+			f.write(dumps(ranking, indent=4))		 
+
+
 
 	def right(self, entry):
 		number = entry.get()
@@ -34,7 +59,7 @@ class Pier:
 			self.pi["text"] = self.pi["text"] + PI[self.pindex]
 			self.pindex += 1
 			if (self.pindex % 20) == 0:
-				self.fontsize -= 1
+				self.fontsize -= 1	
 				self.pi.config(font = ("Courier",self.fontsize))
 			playsound("source\\correct.wav")
 
@@ -44,6 +69,7 @@ class Pier:
 			self.pi.config(bg="#FF9760")
 			
 		else:
+			self.check_rank()
 			self.feed["text"] = "Last number: {}".format(PI[self.pindex])
 			self.pindex = 0
 			self.pi["text"] = ""
@@ -55,12 +81,13 @@ class Pier:
 			self.root.update()
 			sleep(0.1)
 			self.pi.config(bg="#FF9760")
+			
 		self.counter["text"] = "Counter: {}".format(self.pindex)
 
 
 def main():
 	root = Tk()
-	root.geometry("700x400")
+	root.geometry("800x450")
 	root.title("Pi Game")
 	mframe = Frame(root, bg="white")
 	mframe.place(relx=0, rely=0, relwidth=1, relheight=1)
