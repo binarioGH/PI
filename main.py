@@ -58,6 +58,7 @@ def main():
 	digit.place(relx=0.35, rely=0.5, relwidth=0.15, relheight=0.1)
 	check = Button(mframe, bg="#FF9760", fg="black", font='Helvetica 18',text="Check!", command=lambda:pier.right(digit))
 	check.place(relx=0.55, rely=0.5, relwidth=0.15, relheight=0.1)
+	root.bind('<Return>', lambda *args,**kargs:pier.right(digit))
 	root.mainloop()
 
 
