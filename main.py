@@ -19,14 +19,17 @@ class Pier:
 
 	def right(self, entry):
 		number = entry.get()
+		entry.delete(0, 'end')
+
 		if not len(number):
 			return 0
 		else:
 			number = number[0]
 			if number == ",":
 				number = "."
-
-		entry.delete(0, 'end')
+			elif not number.isnumeric() and number not in [".", ","]:
+				return 0
+		
 		if number == PI[self.pindex]:
 			self.pi["text"] = self.pi["text"] + PI[self.pindex]
 			self.pindex += 1
