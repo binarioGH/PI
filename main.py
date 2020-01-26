@@ -85,7 +85,8 @@ class Pier:
 		self.counter["text"] = "Counter: {}".format(self.pindex)
 
 
-def main():
+
+def ask_pi():
 	root = Tk()
 	root.geometry("800x450")
 	root.title("Pi Game")
@@ -107,8 +108,36 @@ def main():
 	root.bind('<Return>', lambda *args,**kargs:pier.right(digit))
 	root.mainloop()
 
+class Menu:
+	def __init__(self):
+		self.closed = False
+
+	def select_mode(self):
+		root = Tk()
+		root.geometry("800x450")
+		root.title("PI")
+		root.protocol("WM_DELETE_WINDOW", lambda *args, **kwargs:self.__on_close(root))
+		mframe = Frame(root, bg="white")
+		mframe.place(relx=0, rely=0, relwidth=1, relheight=1)
+		title = Label(mframe, bg="white", font='Helvetica 18 bold', fg="black", text="Main Menu")
+		title.place(relx = 0.3, rely=0.1, relwidth=0.4, relheight=0.1)
+		blitz = Button(mframe, text="Blitz", bg="#FF9760",font="Helvetica 14 bold", fg="black", command=lambda: self.start(ask_pi, root))
+		blitz.place(relx=0.3, rely=0.3, relwidth=0.4, relheight=0.1)
+		root.mainloop()
+
+	def start(self, mode, root):
+		root.destroy()
+		mode()
+
+
+	def __on_close(self, root):
+		root.destroy()
+		self.closed = True
 
 
 
 if __name__ == '__main__':
-	main()
+	main = Menu()
+	while not main.closed:
+		main.select_mode()
+	
