@@ -84,7 +84,44 @@ class Pier:
 			
 		self.counter["text"] = "Counter: {}".format(self.pindex)
 
+class Write:
+	def __init__(self):
+		pass
 
+	def check(self, inpt, root):
+		text = inpt.get('1.0', 'end-1c').strip()
+		inpt.delete('1.0', END)
+		inpt.insert(END, text)
+		if len(text) > len(PI):
+			text = text[:len(PI)]
+		if text == PI[0:len(text)]:
+			playsound("source\\correct.wav")
+			inpt.config(bg="#66E874")
+		else:
+			playsound("source\\wrong.wav")
+			inpt.config(bg="#FF1C0F")
+		root.update()
+		sleep(0.1)
+		inpt.config(bg="white")
+
+		
+
+
+def write_pi():
+	w = Write()
+	root = Tk()
+	root.geometry("800x450")
+	root.title("Pi Game")
+	mframe = Frame(root, bg="white")
+	mframe.place(relx=0, rely=0, relwidth=1, relheight=1)
+	title = Label(mframe, text="Write Pi", font="Helvetica 18 bold", bg="white", fg="black")
+	title.place(relx=0.3, rely=0.1, relwidth=0.4, relheight=0.1)
+	inpt = Text(mframe, bg="white", fg="black", font="Helvetica 14",  borderwidth=2, relief="solid")
+	inpt.place(relx=0.2, rely=0.3, relwidth=0.6, relheight=0.4)
+	root.bind("<Return>", lambda *args, **kwargs: w.check(inpt, root))
+	check = Button(mframe, bg="#FF9760", fg="black", text="Check!", font="Helvetica 16 bold", command=lambda:w.check(inpt, root))
+	check.place(relx=0.4, rely=0.8, relwidth=0.2, relheight=0.1)
+	root.mainloop()
 
 def ask_pi():
 	root = Tk()
@@ -123,6 +160,8 @@ class Menu:
 		title.place(relx = 0.3, rely=0.1, relwidth=0.4, relheight=0.1)
 		blitz = Button(mframe, text="Blitz", bg="#FF9760",font="Helvetica 14 bold", fg="black", command=lambda: self.start(ask_pi, root))
 		blitz.place(relx=0.3, rely=0.3, relwidth=0.4, relheight=0.1)
+		write = Button(mframe, text="Write", bg="#FF9760", font="Helvetica 14 bold", fg="black", command=lambda: self.start(write_pi, root))		
+		write.place(relx=0.3, rely=0.5, relwidth=0.4, relheight=0.1)
 		root.mainloop()
 
 	def start(self, mode, root):
