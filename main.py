@@ -18,6 +18,8 @@ class Pier:
 		self.root = root
 		self.counter = counter
 		self.counter["text"] = "Counter: {}".format(self.pindex)
+		self.record, self.ranking= self.get_record()
+
 
 	def load_rank(self, file):
 		try:
@@ -29,16 +31,25 @@ class Pier:
 		finally:
 			return content
 
-	def check_rank(self, file="source\\ranking.json"):
-		ranking = self.load_rank(file)
-		if len(ranking) == 0:
-			ranking[strftime("%D - %H:%M:%S")] = self.pindex
+	def get_record(self):
+		with open("source\\ranking.json", "r") as f:
+			content = loads(f.read())
+		if len(content) == 0:
+			record = 0
 		else:
-			record = max(ranking, key=operator.itemgetter(-1))
-			if self.pindex >= ranking[record]:
-				ranking[strftime("%D - %H:%M:%S")] = self.pindex
-		with open(file, "w") as f:
-			f.write(dumps(ranking, indent=4))		 
+			record = max(content, key=operator.itemgetter(-1))
+
+		return (record, content)
+
+	def update_raning(self):
+		self.ranking[strftime("%D - %H:%M:%S")] = self.pindex
+		with open("source\\ranking.json", "w") as f:
+			f.write(dumps(self.ranking, indent=4))
+
+	def check_rank(self, file="source\\ranking.json"):
+		if self.pindex > self.ranking[self.record]:
+			self.record = self.pindex
+			self.update_ranking()
 
 
 
@@ -131,7 +142,7 @@ def ask_pi():
 	mframe.place(relx=0, rely=0, relwidth=1, relheight=1)
 	title = Label(mframe, bg="white", font='Helvetica 18 bold', fg="black", text="Memorize PI")
 	title.place(relx=0.3, rely=0.1, relwidth=0.4, relheight=0.1)
-	pi = Label(mframe, bg="#FF9760", font=("Courier", 20), text="")
+	pi = Label(mframe, bg="#FF9760", font=("Courier", 11), text="")
 	pi.place(relx=0, rely=0.3, relwidth=1, relheight=0.05)
 	feed = Label(mframe, bg="white", font=("Courier", 20), fg="#FF1C0F")
 	feed.place(relx=0.35, rely=0.75, relwidth=0.35, relheight=0.1)
