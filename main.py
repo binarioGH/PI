@@ -19,7 +19,8 @@ class Pier:
 		self.counter = counter
 		self.counter["text"] = "Counter: {}".format(self.pindex)
 		self.record, self.ranking= self.get_record()
-
+		print(self.record)
+		print(self.ranking)
 
 	def load_rank(self, file):
 		try:
@@ -41,7 +42,7 @@ class Pier:
 
 		return (record, content)
 
-	def update_raning(self):
+	def update_ranking(self):
 		self.ranking[strftime("%D - %H:%M:%S")] = self.pindex
 		with open("source\\ranking.json", "w") as f:
 			f.write(dumps(self.ranking, indent=4))
@@ -84,7 +85,7 @@ class Pier:
 			self.feed["text"] = "Last number: {}".format(PI[self.pindex])
 			self.pindex = 0
 			self.pi["text"] = ""
-			self.fontsize = 20
+			self.fontsize = 11
 			self.pi.config(bg="#FF9760")
 			self.pi.config(font=("Courier", self.fontsize))
 			playsound("source\\wrong.wav")
